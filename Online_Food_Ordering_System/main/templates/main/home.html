@@ -1,0 +1,49 @@
+{% extends "main/layout.html" %}
+{% block content %}
+
+  <div class="home bg-dark" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbHbhTz8EaR5ruBEQbYpS1tF_kCP5aubJXaBpva4yRlfFBAkMwP7lzX2wAYui4tWUhT4E&usqp=CAU');">
+
+          <div style="text-align: center;">
+            <video src="../media/rietv.mp4" autoplay muted loop  type="video/mp4" style="width: 100%; height:500px; object-fit: cover;">
+
+          </div>
+
+
+
+
+
+
+
+    <div class="container">
+      <h1 style="font-family:Segoe Script; font-size:32px; background-color:white;" class="text-center text-dark mb-3">eCanteen</h1>
+      <div class="row">
+        {% for item in menu_items %}
+            <div class="col-sm-4">
+                <div class="card mb-3" style="height: fit-content; overflow: auto;">
+                  <img src="{{ item.image.url }}" style="height: 250px;">
+                    <div class="card-body text-center">
+
+                      <h5 class="text-center"><a href="{% url 'main:dishes' item.slug %}">{{ item.title }} </a><span class="badge badge-{{ item.label_colour }}">{{ item.labels }}</span></h5>
+                      <p class="text-center">{{ item.description }}</p>
+                      <h5 class="text-center">₹ {{ item.price }}</h5>
+                      <a href="{% url 'main:dishes' item.slug %}" class="btn btn-dark">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+
+
+
+<footer class="text-center text-lg-start">
+  <!-- Copyright -->
+  <div class="text-light text-center p-2 bg-dark">
+    © 2022 Copyright:
+      <a style="text-decoration:none;" class="text-light" href="https://riet.edu.in/">Rajadhani Institute of Engineering & Technology</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+{% endblock content %}

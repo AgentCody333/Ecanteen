@@ -1,0 +1,74 @@
+
+{% load get_group %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'main/styles.css' %}">
+    <title>Food Ordering System</title>
+</head>
+<body >
+{% block content %}
+<div class="cart">
+    <div class="container">
+        <div class="row">
+            <div style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLbnu16v1hj0mG9j0nRX0oCynBSPsKRaCG1g&usqp=CAU');background-size: auto;background-repeat: no-repeat;" class="col-sm-12 mt-5">
+                <h3 class="text-center">Payment Successful!</h3>
+
+                <h4 class="text-center">Total Bill Amount: ₹{{total}} for {{ count }} Orders.</h4>
+                <h6 class="text-center">Please Collect your Food with this Bill.</h6>
+                <br>
+                <div class="table-responsive">
+                    <table class="table table-light">
+                        <thead>
+                        <tr>
+                            <th scope="col">Ordered</th>
+                            <th scope="col">Name</th>
+
+
+                            <th scope="col">Price</th>
+                            <th scope="col">Total Pieces</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for item_active in items %}
+                        <tr>
+                            <td>{{ item_active.ordered_date }}</td>
+                            <td>{{ item_active.item.title }} </td>
+
+
+                            <td>{{ item_active.item.price }}</td>
+                            <td>{{ item_active.item.pieces }} pieces</td>
+
+                        </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+
+                                    <h3 class="text-center">
+            Thanks, You are aweseome! <i class="fas fa-check-circle"></i>
+        </h3>
+        <h5 class="text-center">
+            <a style="color:red" href="{% url 'main:home' %}">
+               Order Again?
+            </a>
+        </h5>
+
+
+
+
+
+
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,150 @@
+{% load get_group %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'main/styles.css' %}">
+    <title>Food Ordering System</title>
+</head>
+<body style="background-image: url('https://media.istockphoto.com/photos/hexagonal-honeycomb-abstract-3d-background-picture-id905438692?b=1&k=20&m=905438692&s=170667a&w=0&h=pTjmS2z305vjoU2j-yWgUwEK_mdK-F8IH5yGtVsbDAY=');background-size: cover;background-repeat: no-repeat;">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark " style="background-color: black;">
+        <a class="navbar-brand" href="#">
+            <img src="https://riet.net.in/wp-content/uploads/2019/03/Logo-RIET-1024x155.png" width="280" height="30" class="d-inline-block align-top" alt="">
+
+            </a>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                    <li><a href="{% url 'main:home' %}" class="btn mr-2 text-light">Home</a></li>
+                {% if user.is_authenticated %}
+                    {% if request.user|has_group:"admin_owner" %}
+                        <li><a href="{% url 'main:admin_dashboard' %}" class="btn mr-2 text-light">DashBoard</a></li>
+                        <li>
+                            <form class="logout-link" action="{% url 'accounts:logout' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn mr-2">Logout</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'main:cart' %}" class="btn mr-2 text-light">My Cart🛒</a></li>
+                        <li><a href="{% url 'main:order_details' %}" class="btn mr-2 text-light">Your Orders</a></li>
+                        <li>
+                            <form class="logout-link" action="{% url 'accounts:logout' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class=" btn btn-outline-success mr-2">Logout</button>
+                            </form>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <li><a href="{% url 'accounts:login' %}" class="btn mr-2 text-light">Login</a></li>
+                    <li><a href="{% url 'accounts:signup' %}" class="btn mr-2 text-light">SignUp</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+
+<div class="dishes" style="background-image: url('https://media.istockphoto.com/photos/hexagonal-honeycomb-abstract-3d-background-picture-id905438692?b=1&k=20&m=905438692&s=170667a&w=0&h=pTjmS2z305vjoU2j-yWgUwEK_mdK-F8IH5yGtVsbDAY=');">
+    <!--Main layout-->
+  <main class="mt-3 pt-4 main">
+    <div class="container dark-grey-text">
+      <div class="row wow fadeIn">
+        <div class="col-md-6 mb-4">
+          <img src="{{ item.image.url }}" class="img-fluid mt-4" alt="">
+        </div>
+        <div class="col-md-6 mb-4 information">
+          <!--Content-->
+          <div class="p-4 content">
+            <div class="mt-0">
+                <h2>{{ item.title }}</h2>
+            </div>
+            <div class="lead">
+              {% if item.description %}
+              <h5>{{ item.description }}<span class="badge badge-{{ item.label_colour }} ml-2">{{ item.labels }}</span></h5>
+              {% endif %}
+              <h3>₹{{ item.price }} per order of {{ item.pieces}} pieces</h3>
+              <h4>{{ item.instructions }}</h4>
+            </div>
+            <a href="{% url 'main:add-to-cart' item.slug %}" class="btn btn-primary btn-md my-0 p">Add to cart</a>
+          </div>
+        </div>
+      </div>
+      <hr>
+    </div>
+  </main>
+  <div  class="container">
+    <h1 class="text-center">Reviews</h1>
+
+    <form action="{% url 'main:add_reviews' %}" method="POST" class="mb-3">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-sm-11">
+          <input type="text" name="review" class="form-control" placeholder="Enter Your Review">
+          <input type="hidden" name="rslug" class="form-control" value="{{item.slug}}">
+        </div>
+        <div class="col-sm-1">
+          <button type="submit" class="btn btn-danger">Submit</button>
+        </div>
+      </div>
+    </form>
+
+    {% for review in reviews %}
+    <div style="height:100px;" class="main-reviews card bg-light mb-3">
+      <div style="padding:1.0rem;" class="card-body">
+        <div class="user_details" style="display: flex; border-bottom: 1px solid rgb(31, 30, 30);align-items: baseline;justify-content: space-between;flex-direction: row;">
+        <p class="mr-3">{{ review.user.username }} </p>
+          <h8 class="mt-2">{{ review.posted_on }}</h8>
+        </div>
+
+          <h5>{{ review.review }}</h5>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div >
+</div>
+
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+        $('.carousel').carousel();
+    </script>
+
+
+
+
+
+
+
+
+<footer style="margin-top: 190px;" class="text-center text-lg-start">
+  <!-- Copyright -->
+  <div class="text-light text-center p-2 bg-dark">
+    © 2022 Copyright:
+      <a style="text-decoration:none;" class="text-light" href="https://riet.edu.in/">Rajadhani Institute of Engineering & Technology</a>
+  </div>
+  <!-- Copyright -->
+</footer>
